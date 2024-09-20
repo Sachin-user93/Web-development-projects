@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Movie</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">KYTE</a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="add-category.html">Add Category</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="add-movie.html">Add Movie</a></li>
+                    <li class="nav-item"><a class="nav-link" href="report.html">Report</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Add Movie Form -->
+    <div class="container mt-5">
+        <h2>Add Movie</h2>
+        <form id="movie-form">
+            <div class="form-group">
+                <label for="movie-name">Movie Name:</label>
+                <input type="text" id="movie-name" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="movie-date">Date Watched:</label>
+                <input type="date" id="movie-date" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="movie-duration">Movie Duration (minutes):</label>
+                <input type="number" id="movie-duration" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="movie-category">Movie Category:</label>
+                <select id="movie-category" class="form-control" required></select>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Submit</button>
+        </form>
+    </div>
+
+    <script src="add-movie.js">
+       
+    </script>
+</body>
+</html>
