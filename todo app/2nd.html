@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <style>/* styles.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+    width: 400px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.input-label {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #f8f8f8;
+}
+
+.input-label input {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 16px;
+    padding: 5px 0;
+}
+
+.input-label span {
+    font-size: 14px;
+    color: #666;
+}
+
+button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.task-list {
+    margin-top: 20px;
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+}
+
+.task {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.task-content {
+    margin-bottom: 10px;
+}
+
+.task-content p {
+    margin: 5px 0;
+    font-size: 16px;
+}
+
+.task-content span {
+    font-weight: bold;
+    color: #555;
+}
+
+.task-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.change-btn, .delete-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.change-btn:hover {
+    background-color: #0056b3;
+}
+
+.delete-btn {
+    background-color: #dc3545;
+}
+
+.delete-btn:hover {
+    background-color: #c82333;
+}
+</style>
+</head>
+<body>
+    <div class="container">
+        <h1>To-Do List</h1>
+        <div class="input-group">
+            <label class="input-label">
+                <span>Task</span>
+                <input type="text" id="task" placeholder="Enter your task">
+            </label>
+            <label class="input-label">
+                <span>Day</span>
+                <input type="date" id="day">
+            </label>
+            <label class="input-label">
+                <span>Time</span>
+                <input type="time" id="time">
+            </label>
+            <button id="addTaskBtn">Add Task</button>
+            <button id="showTasksBtn">Show All Tasks</button>
+        </div>
+        <div id="taskList" class="task-list"></div>
+    </div>
+    <script >
+	// script.js
+
+document.getElementById("addTaskBtn").addEventListener("click", addTask);
+document.getElementById("showTasksBtn").addEventListener("click", showTasks);
+
+function addTask() {
+    const task = document.getElementById("task").value;
+    const day = document.getElementById("day").value;
+    const time = document.getElementById("time").value;
+
+    if (task === "" || day === "" || time === "") {
+        alert("Please fill in all fields.");
+        return;
+    }
+
+    const taskObj = {
+        task,
+        day,
+        time,
+    };
+
+    let tasks = localStorage.getItem("tasks");
+    if (tasks === null) {
+        tasks = [];
+    } else {
+        tasks = JSON.parse(tasks);
+    }
+
+    tasks.push(taskObj);
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+
+    document.getElementById("task").value = "";
+    document.getElementById("day").value = "";
+    document.getElementById("time").value = "";
+
+    alert("Task added successfully!");
+}
+
+function showTasks() {
+    const taskList = document.getElementById("taskList");
+    taskList.innerHTML = "";
+
+    let tasks = localStorage.getItem("tasks");
+    if (tasks === null) {
+        tasks = [];
+    } else {
+        tasks = JSON.parse(tasks);
+    }
+
+    tasks.forEach((taskObj, index) => {
+        const taskItem = document.createElement("div");
+        taskItem.classList.add("task");
+
+        const taskContent = document.createElement("div");
+        taskContent.classList.add("task-content");
+        taskContent.innerText = `${taskObj.task} - ${taskObj.day} - ${taskObj.time}`;
+        taskItem.appendChild(taskContent);
+
+        const taskActions = document.createElement("div");
+        taskActions.classList.add("task-actions");
+
+        const changeBtn = document.createElement("button");
+        changeBtn.classList.add("change-btn");
+        changeBtn.innerText = "Change";
+        changeBtn.addEventListener("click", () => changeTask(index));
+        taskActions.appendChild(changeBtn);
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.classList.add("delete-btn");
+        deleteBtn.innerText = "Delete";
+        deleteBtn.addEventListener("click", () => deleteTask(index));
+        taskActions.appendChild(deleteBtn);
+
+        taskItem.appendChild(taskActions);
+        taskList.appendChild(taskItem);
+    });
+}
+
+function changeTask(index) {
+    let tasks = localStorage.getItem("tasks");
+    tasks = JSON.parse(tasks);
+
+    const taskObj = tasks[index];
+
+    document.getElementById("task").value = taskObj.task;
+    document.getElementById("day").value = taskObj.day;
+    document.getElementById("time").value = taskObj.time;
+
+    deleteTask(index);
+}
+
+function deleteTask(index) {
+    let tasks = localStorage.getItem("tasks");
+    tasks = JSON.parse(tasks);
+
+    tasks.splice(index, 1);
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+
+    showTasks();
+}
+
+	</script>
+</body>
+</html>
